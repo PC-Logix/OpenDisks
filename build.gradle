@@ -52,7 +52,7 @@ minecraft {
 
 version = "${version}.${project.ext.buildNumber}"
 jar.manifest = manifest { attributes(
-	"FMLCorePlugin": "pcl.opensecurity.util.OpenDisksUnpack",
+	"FMLCorePlugin": "pcl.opendisks.OpenDisksUnpack",
 	"FMLCorePluginContainsFMLMod": "icanhazfmlmodpweeze"
 ) }
 sourceSets.main.java.srcDir("./src/externs/java")

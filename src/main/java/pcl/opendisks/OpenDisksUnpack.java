@@ -15,9 +15,9 @@ import java.nio.file.Paths;
 import net.minecraftforge.fml.relauncher.IFMLCallHook;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-public class OpenDiskUnpack implements IFMLLoadingPlugin, IFMLCallHook {
+public class OpenDisksUnpack implements IFMLLoadingPlugin, IFMLCallHook {
 	public void load() throws IOException, URISyntaxException {
-		File f = new File("mods"+File.separator+"opendisk"+File.separator+"lua"+File.separator+"od-test");
+		File f = new File("mods"+File.separator+"opendisks"+File.separator+"lua"+File.separator+"od-test");
 		f.mkdirs();
 		final String path = "assets/opendisks/lua/od-test/";
 		System.out.println("Extracting Example Floppy from: " +path);
@@ -29,7 +29,7 @@ public class OpenDiskUnpack implements IFMLLoadingPlugin, IFMLCallHook {
 			while(entries.hasMoreElements()) {
 				final String name = entries.nextElement().getName();
 				if (name.startsWith(path) && name.endsWith(".lua") || name.endsWith(".cfg")) { //filter according to the path
-					InputStream FileStream = OpenDiskUnpack.class.getClassLoader().getResourceAsStream(name);
+					InputStream FileStream = OpenDisksUnpack.class.getClassLoader().getResourceAsStream(name);
 					Path p = Paths.get(name);
 					String file = p.getFileName().toString();
 					System.out.println("Extracting file: " + file);
