@@ -1,0 +1,94 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+plugins {
+  id "com.matthewprenger.cursegradle" version "1.0.7"
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+repositories {
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
+    }
+}
+
+if (System.getenv().BUILD_NUMBER != null)
+	ext.buildNumber = System.getenv().BUILD_NUMBER?.toInteger()
+else
+	ext.buildNumber = 0
+
+version = "0.1.0"
+group = "pcl.opendisks"
+archivesBaseName = "OpenDisks-MC1.10.2"
+
+dependencies {
+    deobfCompile "li.cil.oc:OpenComputers:MC1.10.2-1.7.+"
+}
+
+minecraft {
+    version = "1.10.2-12.18.3.2221"
+    runDir = "run"
+    
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "stable_29"
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    replace "@VERSION@", project.version
+	replace "@BUILD@", project.ext.buildNumber
+}
+
+version = "${version}.${project.ext.buildNumber}"
+sourceSets.main.java.srcDir("./src/externs/java")
+
+jar.doFirst {
+	for (String s : new File("./src/externs/java").list())
+		delete new File(sourceSets.main.output.classesDir, s);
+}
+
+def curseforge_key = 0
+def curse_changlog = "default"
+if (project.hasProperty('opensecurity_curseforge_key')) {
+	curseforge_key = project.opensecurity_curseforge_key
+	curse_changlog = project.changelog
+}
+
+curseforge {
+	apiKey = curseforge_key
+	project {
+		id = "225225"
+		releaseType = "release"
+		changelog = curse_changlog
+	}
+}
+
+processResources {
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version + "." + project.ext.buildNumber, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+// this is needed for IntelliJ so we don't have to copy over the assets manually every time
+idea {
+    module {
+        outputDir = file('build/classes/main')
+    }
+}

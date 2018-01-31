@@ -1,0 +1,16 @@
+[
+{
+  "modid": "opendisks",
+  "name": "OpenDisks",
+  "description": "OpenComputers addon, allows for dynamically creating floppies in your filesystem.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["Michiyo"],
+  "credits": "OpenComputers/Sangar for the awesome computer mod.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
