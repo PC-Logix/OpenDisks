@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  *
  */
 
-@Mod(modid=OpenDisks.MODID, name="OpenDisks", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers")
+@Mod(modid=OpenDisks.MODID, name="OpenDisks", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers", acceptableRemoteVersions = "*")
 
 public class OpenDisks {
 	public static final String MODID = "opendisks";
@@ -37,11 +37,14 @@ public class OpenDisks {
 	@SidedProxy(clientSide = "pcl.opendisks.ClientProxy", serverSide = "pcl.opendisks.CommonProxy")
 	public static CommonProxy proxy;
 
-	private static boolean debug = true;
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		listFilesForFolder(new File(event.getModConfigurationDirectory()+"/../mods/opendisks/lua/"));
+		try {
+			listFilesForFolder(new File(OpenDisks.proxy.getBaseFolder().toString() + "\\mods\\opendisks\\lua\\"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void listFilesForFolder(final File folder) {
@@ -78,7 +81,7 @@ public class OpenDisks {
 						EnumDyeColor colorEnum = EnumDyeColor.byDyeDamage(color);
 						ItemStack floppy = li.cil.oc.api.Items.registerFloppy(name, colorEnum, OpenDiskFactory, true);
 						floppy.setStackDisplayName(name);
-						System.out.println("Registering a floppy with name " + fileEntry.getName() + " Color: " + colorEnum.getName());
+						System.out.println("Registering a floppy with name " + name + " Color: " + colorEnum.getName());
 						i++;
 					} else {
 						System.out.println("Not a disk");
