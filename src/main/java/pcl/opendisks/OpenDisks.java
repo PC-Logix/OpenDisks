@@ -50,7 +50,7 @@ public class OpenDisks {
 			int i = 1;
 			for (final File fileEntry : files) {
 				if (fileEntry.isDirectory()) {
-					if (new File(fileEntry+"/disk.cfg").isFile()) {
+					if (new File(fileEntry+"/.disk.cfg").isFile()) {
 						Callable<FileSystem> OpenDiskFactory = new Callable<FileSystem>() {
 							@Override
 							public FileSystem call() {
@@ -58,7 +58,7 @@ public class OpenDisks {
 									Path sourceFile = Paths.get(DimensionManager.getCurrentSaveRootDirectory().getPath() + File.separator + "opencomputers");
 									Path targetFile = Paths.get(OpenDisks.proxy.getBaseFolder().toString() + "\\mods\\opendisks\\lua\\"+fileEntry.getName()); 
 									Path relativePath = sourceFile.relativize(targetFile);
-									cfg = new Config(targetFile + "\\disk.cfg");
+									cfg = new Config(targetFile + "\\.disk.cfg");
 									Boolean isReadOnly = cfg.getBool("isReadOnly");
 									if (isReadOnly) {
 										return li.cil.oc.api.FileSystem.asReadOnly(li.cil.oc.api.FileSystem.fromSaveDirectory(File.separator + relativePath + File.separator, 1024, false));
@@ -72,7 +72,7 @@ public class OpenDisks {
 								return null;
 							}
 						};
-						cfg = new Config(fileEntry + "\\disk.cfg");
+						cfg = new Config(fileEntry + "\\.disk.cfg");
 						int color = cfg.getInt("color");
 						String name = cfg.getString("name");
 						EnumDyeColor colorEnum = EnumDyeColor.byDyeDamage(color);
