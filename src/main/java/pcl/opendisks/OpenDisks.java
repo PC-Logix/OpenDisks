@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import li.cil.oc.api.fs.FileSystem;
 
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -50,16 +51,20 @@ public class OpenDisks {
 			for (final File fileEntry : files) {
 				if (fileEntry.isDirectory()) {
 					if (new File(fileEntry+"/disk.cfg").isFile()) {
-						//listFilesForFolder(fileEntry);
-						Callable<FileSystem> SOSFactory = new Callable<FileSystem>() {
+						Callable<FileSystem> OpenDiskFactory = new Callable<FileSystem>() {
 							@Override
 							public FileSystem call() {
 								try {
-									
 									Path sourceFile = Paths.get(DimensionManager.getCurrentSaveRootDirectory().getPath() + File.separator + "opencomputers");
 									Path targetFile = Paths.get(OpenDisks.proxy.getBaseFolder().toString() + "\\mods\\opendisks\\lua\\"+fileEntry.getName()); 
 									Path relativePath = sourceFile.relativize(targetFile);
-									return li.cil.oc.api.FileSystem.fromSaveDirectory(File.separator + relativePath + File.separator, 1024, false);
+									cfg = new Config(targetFile + "\\disk.cfg");
+									Boolean isReadOnly = cfg.getBool("isReadOnly");
+									if (isReadOnly) {
+										return li.cil.oc.api.FileSystem.asReadOnly(li.cil.oc.api.FileSystem.fromSaveDirectory(File.separator + relativePath + File.separator, 1024, false));
+									} else {
+										return li.cil.oc.api.FileSystem.fromSaveDirectory(File.separator + relativePath + File.separator, 1024, false);
+									}
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -68,9 +73,11 @@ public class OpenDisks {
 							}
 						};
 						cfg = new Config(fileEntry + "\\disk.cfg");
-						int color = cfg.getProperty("color");
+						int color = cfg.getInt("color");
+						String name = cfg.getString("name");
 						EnumDyeColor colorEnum = EnumDyeColor.byDyeDamage(color);
-						li.cil.oc.api.Items.registerFloppy(fileEntry.getName(), colorEnum, SOSFactory, true);
+						ItemStack floppy = li.cil.oc.api.Items.registerFloppy(name, colorEnum, OpenDiskFactory, true);
+						floppy.setStackDisplayName(name);
 						System.out.println("Registering a floppy with name " + fileEntry.getName() + " Color: " + colorEnum.getName());
 						i++;
 					} else {
@@ -96,10 +103,18 @@ public class OpenDisks {
 			}
 		}
 
-		public int getProperty(String key)
+		public int getInt(String key)
 		{
 			String value = this.configFile.getProperty(key);
 			return Integer.parseInt(value);
+		}
+		public String getString(String key) {
+			String value = this.configFile.getProperty(key);
+			return value;
+		}
+		public Boolean getBool(String key) {
+			String value = this.configFile.getProperty(key);
+			return Boolean.parseBoolean(value);
 		}
 	}
 }
