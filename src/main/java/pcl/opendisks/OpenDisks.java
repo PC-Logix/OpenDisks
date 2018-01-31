@@ -7,25 +7,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.Callable;
-import java.util.regex.Pattern;
-
 import li.cil.oc.api.fs.FileSystem;
 
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * @author Caitlyn
  *
  */
 
-@Mod(modid=OpenDisks.MODID, name="OpenDisks", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers", acceptableRemoteVersions = "*")
+@cpw.mods.fml.common.Mod(modid=OpenDisks.MODID, name="OpenDisks", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers", acceptableRemoteVersions = "*")
 
 public class OpenDisks {
 	public static final String MODID = "opendisks";
@@ -78,10 +74,9 @@ public class OpenDisks {
 						cfg = new Config(fileEntry + "\\.disk.cfg");
 						int color = cfg.getInt("color");
 						String name = cfg.getString("name");
-						EnumDyeColor colorEnum = EnumDyeColor.byDyeDamage(color);
-						ItemStack floppy = li.cil.oc.api.Items.registerFloppy(name, colorEnum, OpenDiskFactory, true);
+						ItemStack floppy = li.cil.oc.api.Items.registerFloppy(name, color, OpenDiskFactory, true);
 						floppy.setStackDisplayName(name);
-						System.out.println("Registering a floppy with name " + name + " Color: " + colorEnum.getName());
+						System.out.println("Registering a floppy with name " + name + " Color: " + color);
 						i++;
 					} else {
 						System.out.println("Not a disk");

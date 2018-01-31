@@ -3,7 +3,7 @@ package pcl.opendisks;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import net.minecraftforge.fml.server.FMLServerHandler;
+import cpw.mods.fml.server.FMLServerHandler;
 
 public class CommonProxy {
 	public Path getDisksFolder() throws IOException {
