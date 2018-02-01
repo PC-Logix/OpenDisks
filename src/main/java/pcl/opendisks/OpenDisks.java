@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.Callable;
-import java.util.regex.Pattern;
-
 import li.cil.oc.api.fs.FileSystem;
 
 import net.minecraft.item.EnumDyeColor;
@@ -25,7 +23,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  *
  */
 
-@Mod(modid=OpenDisks.MODID, name="OpenDisks", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers", acceptableRemoteVersions = "*")
+@Mod(modid=OpenDisks.MODID, name="OpenDisks", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers")
 
 public class OpenDisks {
 	public static final String MODID = "opendisks";
