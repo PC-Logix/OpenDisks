@@ -72,7 +72,7 @@ if (project.hasProperty('opensecurity_curseforge_key')) {
 curseforge {
 	apiKey = curseforge_key
 	project {
-		id = "225225"
+		id = "292956"
 		releaseType = "release"
 		changelog = curse_changlog
 	}
