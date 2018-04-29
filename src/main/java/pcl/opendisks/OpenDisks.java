@@ -58,7 +58,7 @@ public class OpenDisks {
 									Path targetFile = Paths.get(OpenDisks.proxy.getBaseFolder().toString() + "\\mods\\opendisks\\lua\\"+fileEntry.getName()); 
 									Path relativePath = sourceFile.relativize(targetFile);
 									cfg = new Config(targetFile + "\\.disk.cfg");
-									Boolean isReadOnly = cfg.getBool("isReadOnly");
+									Boolean isReadOnly = cfg.getBool("isReadOnly", "true");
 									if (isReadOnly) {
 										return li.cil.oc.api.FileSystem.asReadOnly(li.cil.oc.api.FileSystem.fromSaveDirectory(File.separator + relativePath + File.separator, 1024, false));
 									} else {
@@ -72,9 +72,10 @@ public class OpenDisks {
 							}
 						};
 						cfg = new Config(fileEntry + "\\.disk.cfg");
-						int color = cfg.getInt("color");
-						String name = cfg.getString("name");
-						ItemStack floppy = li.cil.oc.api.Items.registerFloppy(name, color, OpenDiskFactory, true);
+						int color = cfg.getInt("color", "0");
+						String name = cfg.getString("name", fileEntry.getName());
+						Boolean isCraftable = cfg.getBool("isCraftable", "true");
+						ItemStack floppy = li.cil.oc.api.Items.registerFloppy(name, color, OpenDiskFactory, isCraftable);
 						floppy.setStackDisplayName(name);
 						System.out.println("Registering a floppy with name " + name + " Color: " + color);
 						i++;
@@ -101,17 +102,17 @@ public class OpenDisks {
 			}
 		}
 
-		public int getInt(String key)
+		public int getInt(String key, String defultVal)
 		{
-			String value = this.configFile.getProperty(key);
+			String value = this.configFile.getProperty(key, defultVal);
 			return Integer.parseInt(value);
 		}
-		public String getString(String key) {
-			String value = this.configFile.getProperty(key);
+		public String getString(String key, String defultVal) {
+			String value = this.configFile.getProperty(key, defultVal);
 			return value;
 		}
-		public Boolean getBool(String key) {
-			String value = this.configFile.getProperty(key);
+		public Boolean getBool(String key, String defultVal) {
+			String value = this.configFile.getProperty(key, defultVal);
 			return Boolean.parseBoolean(value);
 		}
 	}
