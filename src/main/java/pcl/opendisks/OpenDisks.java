@@ -68,8 +68,8 @@ public class OpenDisks {
 				if (fileEntry.isDirectory()) {
 					if (new File(fileEntry+"/.disk.cfg").isFile()) {
 						cfg = new Config(fileEntry + "/.disk.cfg");
-						String name = cfg.getString("name");
-						int color = cfg.getInt("color");
+						String name = cfg.getString("name", fileEntry.getName());
+						int color = cfg.getInt("color", "0");
 						EnumDyeColor colorEnum = EnumDyeColor.byDyeDamage(color);
 						
 						Callable<FileSystem> OpenDiskFactory = new Callable<FileSystem>() {
@@ -80,7 +80,7 @@ public class OpenDisks {
 									Path targetFile = Paths.get(OpenDisks.proxy.getBaseFolder().toString() + "\\mods\\opendisks\\lua\\"+fileEntry.getName()); 
 									Path relativePath = sourceFile.relativize(targetFile);
 									cfg = new Config(targetFile + "\\.disk.cfg");
-									Boolean isReadOnly = cfg.getBool("isReadOnly");
+									Boolean isReadOnly = cfg.getBool("isReadOnly", "true");
 									if (isReadOnly) {
 										return li.cil.oc.api.FileSystem.asReadOnly(li.cil.oc.api.FileSystem.fromSaveDirectory(File.separator + relativePath + File.separator, 1024, false));
 									} else {
@@ -93,7 +93,8 @@ public class OpenDisks {
 								return null;
 							}
 						};
-						ItemStack loot = li.cil.oc.common.Loot.registerLootDisk(name, colorEnum, OpenDiskFactory, true);						
+						Boolean isCraftable = cfg.getBool("isCraftable", "true");
+						ItemStack loot = li.cil.oc.common.Loot.registerLootDisk(name, colorEnum, OpenDiskFactory, isCraftable);
 						loot.setStackDisplayName(name);
 						List<Tuple2<ItemStack, Object>> elems = new ArrayList<Tuple2<ItemStack, Object>>();
 						elems.add(new Tuple2<ItemStack, Object>(loot, 0));
@@ -119,17 +120,17 @@ public class OpenDisks {
 			}
 		}
 
-		public int getInt(String key)
+		public int getInt(String key, String defultVal)
 		{
-			String value = this.configFile.getProperty(key);
+			String value = this.configFile.getProperty(key, defultVal);
 			return Integer.parseInt(value);
 		}
-		public String getString(String key) {
-			String value = this.configFile.getProperty(key);
+		public String getString(String key, String defultVal) {
+			String value = this.configFile.getProperty(key, defultVal);
 			return value;
 		}
-		public Boolean getBool(String key) {
-			String value = this.configFile.getProperty(key);
+		public Boolean getBool(String key, String defultVal) {
+			String value = this.configFile.getProperty(key, defultVal);
 			return Boolean.parseBoolean(value);
 		}
 	}
