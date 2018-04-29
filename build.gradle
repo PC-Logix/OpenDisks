@@ -62,7 +62,7 @@ if (project.hasProperty('opensecurity_curseforge_key')) {
 apply plugin: 'curseforge'
 curse {
 	apiKey = curseforge_key
-	projectId = "231687"
+	projectId = "292956"
 	releaseType = "release"
 	changelog = curse_changlog
 	addGameVersion project.minecraft.version
